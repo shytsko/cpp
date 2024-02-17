@@ -6,12 +6,13 @@
  * англоязычным, дабы избежать проблем с кодировками.*/
 
 #include <fstream>
+#include <ios>
 #include <iostream>
 #include <string>
 
 void viewFile(std::string filePath) {
 
-  std::ifstream file(filePath);
+  std::ifstream file(filePath, std::ios::binary);
 
   if (file.is_open()) {
     char buffer[21];
