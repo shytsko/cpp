@@ -14,7 +14,6 @@ int wordSearch(std::string filePath, std::string word) {
   int result = 0;
 
   if (file.is_open()) {
-
     std::string line;
     while (!(file.eof())) {
       std::getline(file, line);
