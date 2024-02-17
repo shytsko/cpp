@@ -21,9 +21,8 @@ void viewFile(std::string filePath) {
       buffer[file.gcount()] = '\0';
       std::cout << buffer;
     }
+    file.close();
   }
-
-  file.close();
 }
 
 int main() {
