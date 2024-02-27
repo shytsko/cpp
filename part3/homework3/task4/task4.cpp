@@ -32,6 +32,8 @@ R, U, D (по первым буквам слов left, right, up, down). В за
 #include <iostream>
 #include <string>
 #include <vector>
+#include <fstream>
+#include <algorithm>
 
 #define BOARD_SIZE 20
 #define NUMBER_ENEMIES 5
@@ -52,105 +54,109 @@ R, U, D (по первым буквам слов left, right, up, down). В за
 #define OCCUPIED_PLAYER 'P'
 #define OCCUPIED_ENEMY 'E'
 
-enum class GameStatus { IN_PROCESS, PLAYER_WON, PLAYER_LOST };
+enum class GameStatus
+{
+  IN_PROCESS,
+  PLAYER_WON,
+  PLAYER_LOST
+};
 
-struct Position {
+struct Position
+{
   int row;
   int column;
 
-  bool operator==(const Position &otherPosition) {
+  bool operator==(const Position &otherPosition)
+  {
     return row == otherPosition.row && column == otherPosition.column;
   }
 
-  bool operator!=(const Position &otherPosition) {
+  bool operator!=(const Position &otherPosition)
+  {
     return row != otherPosition.row || column != otherPosition.column;
   }
 };
 
-struct Character {
+struct Character
+{
   std::string name;
-  int life;
+  int health;
   int armor;
   int damage;
   Position position;
 };
 
-struct Game {
+struct Game
+{
   char board[BOARD_SIZE][BOARD_SIZE];
   Character player;
   std::vector<Character> enemies;
   GameStatus status = GameStatus::IN_PROCESS;
 };
 
-Character createEnemy(const std::string &name) {
-  Character enemy;
-  enemy.name = name;
-  enemy.life =
-      std::rand() % (ENEMY_LIFE_MAX - ENEMY_LIFE_MIN + 1) + ENEMY_LIFE_MIN;
-  enemy.armor =
-      std::rand() % (ENEMY_ARMOR_MAX - ENEMY_ARMOR_MIN + 1) + ENEMY_ARMOR_MIN;
-  enemy.damage = std::rand() % (ENEMY_DAMAGE_MAX - ENEMY_DAMAGE_MIN + 1) +
-                 ENEMY_DAMAGE_MIN;
-  return enemy;
+Position getRandomPosition(Game &game)
+{
+  int row, column;
+  do
+  {
+    row = std::rand() % BOARD_SIZE;
+    column = std::rand() % BOARD_SIZE;
+  } while (game.board[row][column] != EMPTY);
+  return {row, column};
 }
 
-Character createPlayer() {
-  Character player;
-  std::cout << "Player name: ";
-  std::cin >> player.name;
-  std::cout << "Player life: ";
-  std::cin >> player.life;
-  std::cout << "Player armor: ";
-  std::cin >> player.armor;
-  std::cout << "Player damage: ";
-  std::cin >> player.damage;
-  return player;
-}
-
-void initGame(Game &game) {
+void initGame(Game &game)
+{
   std::srand((unsigned)std::time(nullptr));
   for (size_t i = 0; i < BOARD_SIZE; i++)
     for (size_t j = 0; j < BOARD_SIZE; j++)
       game.board[i][j] = EMPTY;
 
-  for (int i = 0; i < NUMBER_ENEMIES; i++) {
-    Character enemy = createEnemy("Enemy #" + std::to_string(i + 1));
-    int row, column;
-    do {
-      row = std::rand() % BOARD_SIZE;
-      column = std::rand() % BOARD_SIZE;
-    } while (game.board[row][column] != EMPTY);
-    enemy.position.row = row;
-    enemy.position.column = column;
-    game.board[row][column] = OCCUPIED_ENEMY;
-    game.enemies.push_back(enemy);
+  game.enemies.clear();
+  game.enemies.resize(NUMBER_ENEMIES);
+  int i = 0;
+  for (Character &enemy : game.enemies)
+  {
+    enemy.name = "Enemy #" + std::to_string(++i);
+    enemy.health = std::rand() % (ENEMY_LIFE_MAX - ENEMY_LIFE_MIN + 1) + ENEMY_LIFE_MIN;
+    enemy.armor = std::rand() % (ENEMY_ARMOR_MAX - ENEMY_ARMOR_MIN + 1) + ENEMY_ARMOR_MIN;
+    enemy.damage = std::rand() % (ENEMY_DAMAGE_MAX - ENEMY_DAMAGE_MIN + 1) + ENEMY_DAMAGE_MIN;
+    Position position = getRandomPosition(game);
+    enemy.position.row = position.row;
+    enemy.position.column = position.column;
+    game.board[position.row][position.column] = OCCUPIED_ENEMY;
   }
 
-  game.player = createPlayer();
-  int row, column;
-  do {
-    row = std::rand() % BOARD_SIZE;
-    column = std::rand() % BOARD_SIZE;
-  } while (game.board[row][column] != EMPTY);
-  game.player.position.row = row;
-  game.player.position.column = column;
-  game.board[row][column] = OCCUPIED_PLAYER;
+  std::cout << "Player name: ";
+  std::cin >> game.player.name;
+  std::cout << "Player health: ";
+  std::cin >> game.player.health;
+  std::cout << "Player armor: ";
+  std::cin >> game.player.armor;
+  std::cout << "Player damage: ";
+  std::cin >> game.player.damage;
+  Position position = getRandomPosition(game);
+  game.player.position.row = position.row;
+  game.player.position.column = position.column;
+  game.board[position.row][position.column] = OCCUPIED_PLAYER;
 
   game.status = GameStatus::IN_PROCESS;
 }
 
-void printGameData(const Game &game) {
+void printGameData(const Game &game)
+{
   std::cout << "==========================================" << std::endl;
-  std::cout << game.player.name << ": life " << game.player.life
+  std::cout << game.player.name << ": health " << game.player.health
             << ", armor: " << game.player.armor
             << ", damage: " << game.player.damage << std::endl;
 
   for (const Character &enemy : game.enemies)
-    std::cout << enemy.name << ": life " << enemy.life
+    std::cout << enemy.name << ": life " << enemy.health
               << ", armor: " << enemy.armor << ", damage: " << enemy.damage
               << std::endl;
 
-  for (size_t i = 0; i < BOARD_SIZE; i++) {
+  for (size_t i = 0; i < BOARD_SIZE; i++)
+  {
     for (size_t j = 0; j < BOARD_SIZE; j++)
       std::cout << game.board[i][j];
     std::cout << std::endl;
@@ -158,18 +164,22 @@ void printGameData(const Game &game) {
   std::cout << "==========================================" << std::endl;
 }
 
-void atack(const Character &character1, Character &character2) {
+void atack(const Character &character1, Character &character2)
+{
   std::cout << character1.name << " attacked " << character2.name << std::endl;
   character2.armor -= character1.damage;
-  if (character2.armor < 0) {
-    character2.life += character2.armor;
+  if (character2.armor < 0)
+  {
+    character2.health += character2.armor;
     character2.armor = 0;
   }
 }
 
-Position getNewPosition(const Position &currentPosition, char direction) {
+Position getNewPosition(const Position &currentPosition, char direction)
+{
   Position newPosition;
-  switch (direction) {
+  switch (direction)
+  {
   case LEFT:
     newPosition.row = currentPosition.row;
     newPosition.column = currentPosition.column - 1;
@@ -191,68 +201,77 @@ Position getNewPosition(const Position &currentPosition, char direction) {
   return newPosition;
 }
 
-bool outOfBoard(Position position) {
+bool outOfBoard(Position position)
+{
   return position.column < 0 || position.column > BOARD_SIZE - 1 ||
          position.row < 0 || position.row > BOARD_SIZE - 1;
 }
 
-void playerMove(Game &game, char direction) {
+void playerMove(Game &game, char direction)
+{
   Position newPosition = getNewPosition(game.player.position, direction);
 
   if (outOfBoard(newPosition))
     return;
 
-  if (game.board[newPosition.row][newPosition.column] == OCCUPIED_ENEMY) {
+  if (game.board[newPosition.row][newPosition.column] == OCCUPIED_ENEMY)
+  {
     size_t enemyIndex;
 
     for (size_t i = 0; i < game.enemies.size(); i++)
-      if (game.enemies[i].position == newPosition) {
+      if (game.enemies[i].position == newPosition)
+      {
         enemyIndex = i;
         break;
       }
 
     atack(game.player, game.enemies[enemyIndex]);
 
-    if (game.enemies[enemyIndex].life <= 0) {
-      std::cout << "Enemy " << game.enemies[enemyIndex].name << " killed"
-                << std::endl;
-      game.board[game.enemies[enemyIndex].position.row]
-                [game.enemies[enemyIndex].position.column] = EMPTY;
+    if (game.enemies[enemyIndex].health <= 0)
+    {
+      std::cout << "Enemy " << game.enemies[enemyIndex].name << " killed" << std::endl;
+      game.board[game.enemies[enemyIndex].position.row][game.enemies[enemyIndex].position.column] = EMPTY;
       game.enemies.erase(game.enemies.cbegin() + (int)enemyIndex);
-      if (game.enemies.size() == 0) {
+      if (game.enemies.size() == 0)
+      {
         game.status = GameStatus::PLAYER_WON;
         return;
       }
     }
   }
 
-  if (game.board[newPosition.row][newPosition.column] == EMPTY) {
+  if (game.board[newPosition.row][newPosition.column] == EMPTY)
+  {
     game.board[game.player.position.row][game.player.position.column] = EMPTY;
     game.player.position = newPosition;
-    game.board[game.player.position.row][game.player.position.column] =
-        OCCUPIED_PLAYER;
+    game.board[game.player.position.row][game.player.position.column] = OCCUPIED_PLAYER;
   }
 }
 
-void enemiesMove(Game &game) {
-  for (Character &enemy : game.enemies) {
+void enemiesMove(Game &game)
+{
+  for (Character &enemy : game.enemies)
+  {
     char direction = DIRECTIONS[std::rand() % 4];
 
     Position newPosition = getNewPosition(enemy.position, direction);
 
-    if (outOfBoard(newPosition) ||
-        game.board[newPosition.row][newPosition.column] == OCCUPIED_ENEMY)
+    if (outOfBoard(newPosition) || game.board[newPosition.row][newPosition.column] == OCCUPIED_ENEMY)
       continue;
 
-    if (game.board[newPosition.row][newPosition.column] == OCCUPIED_PLAYER) {
+    if (game.board[newPosition.row][newPosition.column] == OCCUPIED_PLAYER)
+    {
       atack(enemy, game.player);
 
-      if (game.player.life <= 0) {
+      if (game.player.health <= 0)
+      {
         std::cout << "Player " << game.player.name << " killed" << std::endl;
         game.status = GameStatus::PLAYER_LOST;
         return;
       }
-    } else {
+    }
+    else
+    {
       game.board[enemy.position.row][enemy.position.column] = EMPTY;
       enemy.position = newPosition;
       game.board[enemy.position.row][enemy.position.column] = OCCUPIED_ENEMY;
@@ -260,33 +279,117 @@ void enemiesMove(Game &game) {
   }
 }
 
-int main() {
+void saveCharacter(std::ofstream &file, const Character &character)
+{
+  int nameLen = character.name.length();
+  file.write((char *)&nameLen, sizeof(nameLen));
+  file.write(character.name.c_str(), nameLen);
+  file.write((char *)&character.health, sizeof(character.health));
+  file.write((char *)&character.armor, sizeof(character.armor));
+  file.write((char *)&character.damage, sizeof(character.damage));
+  file.write((char *)&character.position, sizeof(character.position));
+}
+
+void loadCharacter(std::ifstream &file, Character &character)
+{
+  int nameLen;
+  file.read((char *)&nameLen, sizeof(nameLen));
+  character.name.resize(nameLen);
+  file.read((char *)character.name.c_str(), nameLen);
+  file.read((char *)&character.health, sizeof(character.health));
+  file.read((char *)&character.armor, sizeof(character.armor));
+  file.read((char *)&character.damage, sizeof(character.damage));
+  file.read((char *)&character.position, sizeof(character.position));
+}
+
+void save(const char *filePath, Game &game)
+{
+  std::ofstream file(filePath, std::ios::binary);
+  if (file.is_open())
+  {
+    saveCharacter(file, game.player);
+    int countEnemies = game.enemies.size();
+    file.write((char *)&countEnemies, sizeof(countEnemies));
+    for (const Character &enemy : game.enemies)
+      saveCharacter(file, enemy);
+    file.write((char *)&game.status, sizeof(game.status));
+  }
+  else
+  {
+    std::cout << "File not saved!" << std::endl;
+  }
+}
+
+void load(const char *filePath, Game &game)
+{
+  std::ifstream file(filePath, std::ios::binary);
+  if (file.is_open())
+  {
+    for (size_t i = 0; i < BOARD_SIZE; i++)
+      for (size_t j = 0; j < BOARD_SIZE; j++)
+        game.board[i][j] = EMPTY;
+    loadCharacter(file, game.player);
+    game.board[game.player.position.row][game.player.position.column] = OCCUPIED_PLAYER;
+    int countEnemies;
+    file.read((char *)&countEnemies, sizeof(countEnemies));
+    game.enemies.clear();
+    game.enemies.resize(countEnemies);
+    for (int i = 0; i < countEnemies; i++)
+    {
+      loadCharacter(file, game.enemies[i]);
+      game.board[game.enemies[i].position.row][game.enemies[i].position.column] = OCCUPIED_ENEMY;
+    }
+    file.read((char *)&game.status, sizeof(game.status));
+  }
+  else
+  {
+    std::cout << "Failed to read file!" << std::endl;
+  }
+}
+
+int main()
+{
+  std::vector<std::string> validСom = {"save", "load", "new", "exit"};
+
   Game game;
   initGame(game);
 
-  while (game.status == GameStatus::IN_PROCESS) {
+  while (game.status == GameStatus::IN_PROCESS)
+  {
+    char filePath[] = "gamedata.bin";
     printGameData(game);
     std::cout << "===== Player move =====" << std::endl;
     char direction;
     std::string command;
-    do {
-      std::cout << "Enter direction (l - left, r - right, u - up, d - down)"
-                << std::endl
-                << "or command (save - save game, load - load game)"
-                << std::endl
+    do
+    {
+      std::cout << "Enter direction (l - left, r - right, u - up, d - down)" << std::endl
+                << "or command (save - save game, load - load game, new - new game, exit - exit the game)" << std::endl
                 << "> ";
       std::cin >> command;
       direction = (char)std::tolower(command[0]);
-    } while (command != "load" && command != "save" &&
-             !strchr(DIRECTIONS, direction));
+    } while (std::find(validСom.begin(), validСom.end(), command) == validСom.end() && !strchr(DIRECTIONS, direction));
 
-    if (command == "save") {
+    if (command == "save")
+    {
+      save(filePath, game);
       continue;
     }
 
-    if (command == "load") {
+    if (command == "load")
+    {
+      load(filePath, game);
       continue;
     }
+
+    if (command == "new")
+    {
+      initGame(game);
+      continue;
+    }
+
+    if (command == "exit")
+      break;
 
     playerMove(game, direction);
     if (game.status == GameStatus::IN_PROCESS)
@@ -295,6 +398,8 @@ int main() {
 
   if (game.status == GameStatus::PLAYER_WON)
     std::cout << "Victory!!!" << std::endl;
-  else
+  else if (game.status == GameStatus::PLAYER_LOST)
     std::cout << "Defeat :(" << std::endl;
+  else
+    std::cout << "Bye Bye" << std::endl;
 }
