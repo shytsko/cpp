@@ -35,6 +35,7 @@ R, U, D (по первым буквам слов left, right, up, down). В за
 #include <fstream>
 #include <algorithm>
 
+// Константы из условия
 #define BOARD_SIZE 20
 #define NUMBER_ENEMIES 5
 #define ENEMY_LIFE_MIN 50
@@ -50,6 +51,7 @@ R, U, D (по первым буквам слов left, right, up, down). В за
 #define DOWN 'd'
 #define DIRECTIONS "lrud"
 
+// симаолы для отображения игрового поля
 #define EMPTY '.'
 #define OCCUPIED_PLAYER 'P'
 #define OCCUPIED_ENEMY 'E'
@@ -94,6 +96,7 @@ struct Game
   GameStatus status = GameStatus::IN_PROCESS;
 };
 
+// Получить координаты случайно не занятой ячейки
 Position getRandomPosition(Game &game)
 {
   int row, column;
@@ -105,13 +108,16 @@ Position getRandomPosition(Game &game)
   return {row, column};
 }
 
+// Инициализаия игры
 void initGame(Game &game)
 {
+  // Начальное заполнение игрового поля
   std::srand((unsigned)std::time(nullptr));
   for (size_t i = 0; i < BOARD_SIZE; i++)
     for (size_t j = 0; j < BOARD_SIZE; j++)
       game.board[i][j] = EMPTY;
 
+  // Создание персонажей врагов
   game.enemies.clear();
   game.enemies.resize(NUMBER_ENEMIES);
   int i = 0;
@@ -127,6 +133,7 @@ void initGame(Game &game)
     game.board[position.row][position.column] = OCCUPIED_ENEMY;
   }
 
+  // Создание персонажа игрока
   std::cout << "Player name: ";
   std::cin >> game.player.name;
   std::cout << "Player health: ";
@@ -167,7 +174,11 @@ void printGameData(const Game &game)
 void atack(const Character &character1, Character &character2)
 {
   std::cout << character1.name << " attacked " << character2.name << std::endl;
+
+  // урон сначала снимает очки брони
   character2.armor -= character1.damage;
+
+  // если броня закончилась, снимаются очки здоровья
   if (character2.armor < 0)
   {
     character2.health += character2.armor;
@@ -175,6 +186,7 @@ void atack(const Character &character1, Character &character2)
   }
 }
 
+// Получение координат новой позиции по текущей позиции и направлению движения
 Position getNewPosition(const Position &currentPosition, char direction)
 {
   Position newPosition;
@@ -201,23 +213,29 @@ Position getNewPosition(const Position &currentPosition, char direction)
   return newPosition;
 }
 
+// Проверка на выход за пределы поля
 bool outOfBoard(Position position)
 {
   return position.column < 0 || position.column > BOARD_SIZE - 1 ||
          position.row < 0 || position.row > BOARD_SIZE - 1;
 }
 
+// ход игрока
 void playerMove(Game &game, char direction)
 {
+  // получаем новые координаты
   Position newPosition = getNewPosition(game.player.position, direction);
 
+  // если вышли за пределы поля, ничего не делаем
   if (outOfBoard(newPosition))
     return;
 
+  // Если в направлении движения находится враг
   if (game.board[newPosition.row][newPosition.column] == OCCUPIED_ENEMY)
   {
     size_t enemyIndex;
 
+    // Ищем, какой конкретно враг на пути
     for (size_t i = 0; i < game.enemies.size(); i++)
       if (game.enemies[i].position == newPosition)
       {
@@ -225,8 +243,11 @@ void playerMove(Game &game, char direction)
         break;
       }
 
+    // и атакуем
     atack(game.player, game.enemies[enemyIndex]);
 
+    // если враг убит, убираем его с поля и удаляем из списка врагов
+    // если врагов больше не осталось, игрок победил
     if (game.enemies[enemyIndex].health <= 0)
     {
       std::cout << "Enemy " << game.enemies[enemyIndex].name << " killed" << std::endl;
@@ -240,6 +261,7 @@ void playerMove(Game &game, char direction)
     }
   }
 
+  // Шагаем на свободное поле (также сработает, если в поле был находился враг, но он был убит)
   if (game.board[newPosition.row][newPosition.column] == EMPTY)
   {
     game.board[game.player.position.row][game.player.position.column] = EMPTY;
@@ -248,17 +270,22 @@ void playerMove(Game &game, char direction)
   }
 }
 
+// Ход врагов
 void enemiesMove(Game &game)
 {
   for (Character &enemy : game.enemies)
   {
+    // получаем случайное направление
     char direction = DIRECTIONS[std::rand() % 4];
 
     Position newPosition = getNewPosition(enemy.position, direction);
 
+    // если вышли за пределы поля или в направлении хода находится другой враг, это враг пропускает ход
     if (outOfBoard(newPosition) || game.board[newPosition.row][newPosition.column] == OCCUPIED_ENEMY)
       continue;
 
+    // если в направлениии хода находится игрок, атакуем его
+    // если здоровье игрока закончилось, игрок проиграл
     if (game.board[newPosition.row][newPosition.column] == OCCUPIED_PLAYER)
     {
       atack(enemy, game.player);
@@ -279,6 +306,14 @@ void enemiesMove(Game &game)
   }
 }
 
+// Сохранение и загрузка отдельного персонажа
+// Формат:
+// длина имени: int
+// строка имени: char[]
+// здоровье: int
+// броня: int
+// урон: int
+// Позиция на поле: Position
 void saveCharacter(std::ofstream &file, const Character &character)
 {
   int nameLen = character.name.length();
@@ -302,6 +337,13 @@ void loadCharacter(std::ifstream &file, Character &character)
   file.read((char *)&character.position, sizeof(character.position));
 }
 
+// Сохранение и загрузка игры
+// Формат:
+// Персонаж игрока:
+// Количество врагов: int
+// Все персонажи врагов
+// Текущий статус игры: GameStatus
+// Игровое поле не сохраняется. При загрузке восстанавливается по координатам отдельных персонажей
 void save(const char *filePath, Game &game)
 {
   std::ofstream file(filePath, std::ios::binary);
@@ -349,18 +391,21 @@ void load(const char *filePath, Game &game)
 
 int main()
 {
+  // Список допустимых команд
   std::vector<std::string> validСom = {"save", "load", "new", "exit"};
+  char filePath[] = "gamedata.bin";
 
   Game game;
   initGame(game);
 
   while (game.status == GameStatus::IN_PROCESS)
   {
-    char filePath[] = "gamedata.bin";
     printGameData(game);
     std::cout << "===== Player move =====" << std::endl;
     char direction;
     std::string command;
+
+    // Ввод команды, пока не будет введена корректная команда или первый символ введенной строки не будет одним из символов направления
     do
     {
       std::cout << "Enter direction (l - left, r - right, u - up, d - down)" << std::endl
