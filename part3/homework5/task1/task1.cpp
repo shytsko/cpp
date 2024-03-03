@@ -16,15 +16,15 @@
 #define SATURDAY 6
 #define SUNDAY 7
 
-#define DAY_STR(d) DAY_##d##_STR
+#define DAY_STR(d) d##_STR
 
-#define DAY_1_STR ("Monday")
-#define DAY_2_STR ("Tuesday")
-#define DAY_3_STR ("Wednesday")
-#define DAY_4_STR ("Thursday")
-#define DAY_5_STR ("Friday")
-#define DAY_6_STR ("Saturday")
-#define DAY_7_STR ("Sunday")
+#define MONDAY_STR ("Monday")
+#define TUESDAY_STR ("Tuesday")
+#define WEDNESDAY_STR ("Wednesday")
+#define THURSDAY_STR ("Thursday")
+#define FRIDAY_STR ("Friday")
+#define SATURDAY_STR ("Saturday")
+#define SUNDAY_STR ("Sunday")
 
 int main() {
   std::cout << "Enter days number: ";
@@ -33,25 +33,25 @@ int main() {
 
   switch (day) {
   case MONDAY:
-    std::cout << DAY_STR(1) << std::endl;
+    std::cout << DAY_STR(MONDAY) << std::endl;
     break;
   case TUESDAY:
-    std::cout << DAY_STR(2) << std::endl;
+    std::cout << DAY_STR(TUESDAY) << std::endl;
     break;
   case WEDNESDAY:
-    std::cout << DAY_STR(3) << std::endl;
+    std::cout << DAY_STR(WEDNESDAY) << std::endl;
     break;
   case THURSDAY:
-    std::cout << DAY_STR(4) << std::endl;
+    std::cout << DAY_STR(THURSDAY) << std::endl;
     break;
   case FRIDAY:
-    std::cout << DAY_STR(5) << std::endl;
+    std::cout << DAY_STR(FRIDAY) << std::endl;
     break;
   case SATURDAY:
-    std::cout << DAY_STR(6) << std::endl;
+    std::cout << DAY_STR(SATURDAY) << std::endl;
     break;
   case SUNDAY:
-    std::cout << DAY_STR(7) << std::endl;
+    std::cout << DAY_STR(SUNDAY) << std::endl;
     break;
 
   default:
