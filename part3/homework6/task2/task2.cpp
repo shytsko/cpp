@@ -19,12 +19,14 @@
 
 #define DATE_FORMAT "%Y/%m/%d"
 
-struct Item {
+struct Item
+{
   std::string name;
-  std::tm birthDate;
+  std::time_t birthDate;
 };
 
-bool inputTime(std::tm *_tm, const char *format) {
+bool inputTime(std::tm *_tm, const char *format)
+{
   std::string dateString;
   std::getline(std::cin, dateString);
   std::istringstream ss(dateString);
@@ -32,30 +34,70 @@ bool inputTime(std::tm *_tm, const char *format) {
   return !(ss.fail() || _tm->tm_mday == 0);
 }
 
-int main() {
+std::time_t getTimeToday(const std::tm *tmNow)
+{
+  std::tm _tm = *tmNow;
+  _tm.tm_sec = 0;
+  _tm.tm_min = 0;
+  _tm.tm_hour = 0;
+  return std::mktime(&_tm);
+}
+
+std::time_t getBirthDay(time_t birthDate, int year)
+{
+  std::tm *_tm = std::localtime(&birthDate);
+  _tm->tm_year = year;
+  return std::mktime(_tm);
+}
+
+std::time_t getLastDayInYear(int year)
+{
+  std::tm _tm{};
+  _tm.tm_sec = 59;
+  _tm.tm_min = 59;
+  _tm.tm_hour = 23;
+  _tm.tm_mday = 31;
+  _tm.tm_mon = 11;
+  _tm.tm_year = year;
+  return std::mktime(&_tm);
+}
+
+int main()
+{
 
   std::list<Item> birthDates;
 
-  while (true) {
+  while (true)
+  {
     std::string name;
     std::cout << "Enter a name or \"end\" to complete the entry" << std::endl
               << "> ";
     std::getline(std::cin, name);
-    if (name != "end") {
-      std::tm date = {};
+    if (name != "end")
+    {
+      std::tm date{};
       std::cout << "Enter date of birth in the format Y/m/d" << std::endl
                 << "> ";
       if (inputTime(&date, DATE_FORMAT))
-        birthDates.push_back({name, date});
+        birthDates.push_back({name, std::mktime(&date)});
       else
         std::cout << "Invalid date" << std::endl;
-    } else {
+    }
+    else
+    {
       break;
     }
   }
 
-  for (const Item &item : birthDates) {
-    std::cout << std::put_time(&(item.birthDate), DATE_FORMAT) << std::endl;
+  std::time_t now = time(nullptr);
+  std::tm *tmNow = std::localtime(&now);
+  std::time_t today = getTimeToday(tmNow);
+
+  for (const Item &item : birthDates)
+  {
+    std::time_t birthDay = getBirthDay(item.birthDate, tmNow->tm_year);
+    if (birthDay == today)
+      std::cout << item.name << " celebrates his birthday today" << std::endl;
   }
 
   return 0;
