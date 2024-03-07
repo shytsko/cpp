@@ -14,25 +14,31 @@ Ivanov — узнать телефон абонента по фамилии
 #include <string>
 #include <vector>
 
-struct PhoneBook {
+struct PhoneBook
+{
   std::map<std::string, std::string> nameByPhone;
   std::map<std::string, std::vector<std::string>> phoneByName;
 };
 
-int main() {
+int main()
+{
   PhoneBook phoneBook;
 
-  while (true) {
-    std::cout << "Enter your request" << std::endl << "> ";
+  while (true)
+  {
+    std::cout << "Enter your request" << std::endl
+              << "> ";
     std::string request;
     std::getline(std::cin, request);
 
-    if (request == "exit") break;
+    if (request == "exit")
+      break;
 
     // Если во введенной строке есть сепаратор (пробел), строка разделяется на
     // телефон и имя и данные добавляются в два словаря
     size_t separatorPosition = request.find(' ');
-    if (separatorPosition != std::string::npos) {
+    if (separatorPosition != std::string::npos)
+    {
       std::string phone = request.substr(0, separatorPosition);
       std::string name = request.substr(separatorPosition + 1);
       phoneBook.nameByPhone[phone] = name;
@@ -41,18 +47,24 @@ int main() {
 
     // Если введенная строка есть среди ключе словаря телефонов, выводится
     // связанное с номером имя
-    else if (phoneBook.nameByPhone.count(request)) {
+    else if (phoneBook.nameByPhone.count(request))
+    {
       std::cout << phoneBook.nameByPhone[request] << std::endl;
     }
 
     // Если введенная строка есть среди ключей словаря имен, выводятся связанные
     // телефоны
-    else if (phoneBook.phoneByName.count(request)) {
+    else if (phoneBook.phoneByName.count(request))
+    {
       for (const std::string &phone : phoneBook.phoneByName[request])
         std::cout << phone << ' ';
       std::cout << std::endl;
-    } else {
+    }
+    else
+    {
       std::cout << "Not found" << std::endl;
     }
   }
+
+  return 0;
 }

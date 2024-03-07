@@ -8,7 +8,8 @@
 #include <map>
 #include <string>
 
-bool isAnagram(std::string text1, std::string text2) {
+bool isAnagram(std::string text1, std::string text2)
+{
   // Если длины строк не равны, дальше можно не проверять
   if (text1.length() != text2.length())
     return false;
@@ -18,7 +19,8 @@ bool isAnagram(std::string text1, std::string text2) {
   // Подсчет разности количества каждого символа в строках
   // В анаграмме количество каждого символа в двух строках должно быть
   // одинаковым и итоге все занчения в словаре должны быть равны 0
-  for (size_t i = 0; i < text1.length(); i++) {
+  for (size_t i = 0; i < text1.length(); i++)
+  {
     chars[text1[i]]++;
     chars[text2[i]]--;
   }
@@ -30,7 +32,8 @@ bool isAnagram(std::string text1, std::string text2) {
   return true;
 }
 
-int main() {
+int main()
+{
   std::string text1, text2;
   std::cout << "Enter first text\n> ";
   std::getline(std::cin, text1);
@@ -41,4 +44,6 @@ int main() {
     std::cout << "The texts are anograms" << std::endl;
   else
     std::cout << "Texts are not anograms" << std::endl;
+
+  return 0;
 }

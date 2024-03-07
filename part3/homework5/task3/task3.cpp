@@ -13,22 +13,30 @@ for-циклами, только опосредованно, через макр
 #define OPTIMAL_NUMBER_PASSENGERS 20
 #define NUMBER_CARRIAGES 10
 
-#define CALL_FOR_EACH(ARR, FUNC)                                               \
-  for (unsigned i = 0; i < NUMBER_CARRIAGES; i++)                              \
+// вызов функции FUNC для каждого элемента массива ARR
+// функция FUNC должна принимать два параметра: номер вагона и количство пассажиров в нем
+#define CALL_FOR_EACH(ARR, FUNC)                  \
+  for (unsigned i = 0; i < NUMBER_CARRIAGES; i++) \
     FUNC((i + 1), ARR[i]);
 
-void checkOverflowing(unsigned number, unsigned passengerCount) {
+// Функция выводит сообщение, если вагон перегружен
+void checkOverflowing(unsigned number, unsigned passengerCount)
+{
   if (passengerCount > OPTIMAL_NUMBER_PASSENGERS)
     std::cout << "Carriage number " << number << " overflowing" << std::endl;
 }
 
-void checkEmptyPlaces(unsigned number, unsigned passengerCount) {
+// Функция выводит сообщение, если в вагоне есть свободные места
+void checkEmptyPlaces(unsigned number, unsigned passengerCount)
+{
   if (passengerCount < OPTIMAL_NUMBER_PASSENGERS)
     std::cout << "In Carriage number " << number
               << " there are free empty seats" << std::endl;
 }
 
-void totalPassengers(unsigned number, unsigned passengerCount) {
+// Функция подсчитывает общее количество пассажиров.
+void totalPassengers(unsigned number, unsigned passengerCount)
+{
   static unsigned total = 0;
   if (number == 1)
     total = 0;
@@ -39,11 +47,14 @@ void totalPassengers(unsigned number, unsigned passengerCount) {
     std::cout << "Total number of passengers: " << total << std::endl;
 }
 
-int main() {
+int main()
+{
   unsigned carriages[NUMBER_CARRIAGES] = {10, 15, 20, 22, 14,
                                           25, 19, 20, 18, 20};
 
   CALL_FOR_EACH(carriages, checkOverflowing)
   CALL_FOR_EACH(carriages, checkEmptyPlaces)
   CALL_FOR_EACH(carriages, totalPassengers)
+
+  return 0;
 }

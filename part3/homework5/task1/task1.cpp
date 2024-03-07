@@ -26,12 +26,14 @@
 #define SATURDAY_STR ("Saturday")
 #define SUNDAY_STR ("Sunday")
 
-int main() {
+int main()
+{
   std::cout << "Enter days number: ";
   int day;
   std::cin >> day;
 
-  switch (day) {
+  switch (day)
+  {
   case MONDAY:
     std::cout << DAY_STR(MONDAY) << std::endl;
     break;
@@ -58,4 +60,6 @@ int main() {
     std::cout << "Incorrect day of the week number" << std::endl;
     break;
   }
+
+  return 0;
 }

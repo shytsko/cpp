@@ -9,34 +9,44 @@
 #include <map>
 #include <string>
 
-int main() {
+int main()
+{
   // Ключ - имя, значение - количество пациентов в очереди с такой фамилией
   std::map<std::string, int> queue;
 
   std::string input;
 
-  while (true) {
+  while (true)
+  {
     std::cout << "Enter name or \"next\" or \"exit\" > ";
     std::cin >> input;
 
-    if (input == "exit") {
+    if (input == "exit")
+    {
       break;
     }
 
-    if (input == "next") {
-      if (!queue.empty()) {
+    if (input == "next")
+    {
+      if (!queue.empty())
+      {
         // Вывод ключа первой пары словаря
         std::cout << queue.begin()->first << std::endl;
 
         // Декремент значения первой пары и проверка на 0
         // Если 0 (пациентов с такой фамилией больше нет), пара удаляется
-        if (--(queue.begin()->second) == 0) {
+        if (--(queue.begin()->second) == 0)
+        {
           queue.erase(queue.begin());
         }
-      } else {
+      }
+      else
+      {
         std::cout << "There are no more patients" << std::endl;
       }
-    } else {
+    }
+    else
+    {
       // Количество пациентов с такой фамилией увеличивается на 1
       // Код работает и в случае, если пациентов с такой фамилией нет
       // В этом случае создается новый элемент словаря со значением по умолчанию
@@ -46,4 +56,6 @@ int main() {
       queue[input]++;
     }
   }
+
+  return 0;
 }

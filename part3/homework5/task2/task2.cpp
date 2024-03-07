@@ -8,14 +8,15 @@ SPRING, SUMMER, AUTUMN или WINTER он задаёт сезон, назван�
 #include <iostream>
 
 // #define SPRING
-// #define SUMMER
+#define SUMMER
 // #define AUTUMN
 // #define WINTER
 
 // Определение в параметрах при компиляции
 //  g++ -D WINTER task2.cpp -o task2.exe
 
-int main() {
+int main()
+{
 #ifdef SPRING
 
   std::cout << "Spring";
@@ -38,4 +39,6 @@ int main() {
   std::cout << "The time of year is uncertain";
 
 #endif
+
+  return 0;
 }
