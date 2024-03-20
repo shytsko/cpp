@@ -15,10 +15,6 @@ std::tm Track::getDate() { return date; }
 
 unsigned Track::getDuration() { return duration; }
 
-bool Track::operator==(std::string &trackName) const {
-  return name == trackName;
-};
-
 std::ostream &operator<<(std::ostream &out, const Track &track) {
   out << "Track name: " << track.name << std::endl
       << "Date of creation: " << std::put_time(&track.date, "%d.%m.%Y")

@@ -52,6 +52,18 @@
         "xlocmon": "cpp",
         "xlocnum": "cpp",
         "xloctime": "cpp",
-        "iomanip": "cpp"
+        "iomanip": "cpp",
+        "array": "cpp",
+        "*.tcc": "cpp",
+        "algorithm": "cpp",
+        "functional": "cpp",
+        "memory_resource": "cpp",
+        "numeric": "cpp",
+        "random": "cpp",
+        "string_view": "cpp",
+        "unordered_map": "cpp",
+        "numbers": "cpp",
+        "sstream": "cpp",
+        "cwctype": "cpp"
     }
 }

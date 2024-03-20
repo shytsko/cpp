@@ -14,6 +14,5 @@ public:
   std::string getName(void);
   std::tm getDate(void);
   unsigned getDuration(void);
-  bool operator==(std::string &) const;
   friend std::ostream &operator<<(std::ostream &out, const Track &);
 };
