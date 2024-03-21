@@ -19,16 +19,28 @@
 #include "phone_number.h"
 #include <iostream>
 
-int main() {
+int main()
+{
   Phone phone;
+  bool exitFlag = false;
 
-  phone.addContact();
-  phone.addContact();
-  phone.addContact();
+  std::string command;
 
-  phone.call();
-  phone.call();
-  phone.call();
+  while (!exitFlag)
+  {
+    std::cout << "Enter command (add, call, sms) > ";
+    std::cin >> command;
+    if (command == "add")
+      phone.addContact();
+    else if (command == "call")
+      phone.call();
+    else if (command == "sms")
+      phone.sms();
+    else if (command == "exit")
+      exitFlag = true;
+    else
+      std::cout << "Invalid command" << std::endl;
+  }
 
   return 0;
 }
