@@ -12,10 +12,13 @@ void Display::addWindow(Window *_window) { window = _window; }
 
 void Display::render(void) {
   char *buffer = new char[height * width];
+
+  // Заполняем все точки символом '0'
   for (unsigned i = 0; i < height; i++)
     for (unsigned j = 0; j < width; j++)
       buffer[i * width + j] = '0';
 
+  // Заполняем область окна символом '1'
   for (unsigned i = (unsigned)window->getPosition().getY();
        i < (unsigned)window->getPosition().getY() + window->getHeight(); i++)
     for (unsigned j = (unsigned)window->getPosition().getX();

@@ -1,7 +1,10 @@
 #pragma once
 
+// #include "display.h"
 #include "vector2D.h"
 
+// #include "display.h" не работает
+// Пришлось сделать так
 class Display;
 
 class Window {
