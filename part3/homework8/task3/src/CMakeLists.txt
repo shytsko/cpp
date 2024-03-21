@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.17)
 
-add_executable(task2
+add_executable(task3
     main.cpp
     phone_number.cpp
     ${PRJ_INCLUDE_DIR}/phone_number.h
@@ -10,4 +10,4 @@ add_executable(task2
     ${PRJ_INCLUDE_DIR}/phone.h
 )
 
-target_include_directories(task2 PUBLIC ${PRJ_INCLUDE_DIR})
+target_include_directories(task1 PUBLIC ${PRJ_INCLUDE_DIR})
