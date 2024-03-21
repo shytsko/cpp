@@ -20,8 +20,11 @@ std::string Phone::selectСontact(void)
   std::string input;
   std::cin >> input;
   PhoneNumber *phoneNumber = phoneBook.findPnoneNumberByName(input);
+  // Сначала пытаемся получить номер телефона из справочника
   if (phoneNumber)
     return phoneNumber->getPhoneNumber();
+
+  // Если в справочника контакта с таким именем нет, проверяем. является ли сама строка правильным номером телефона
   else if (PhoneNumber::isValidPhoneNumber(input))
     return input;
   else

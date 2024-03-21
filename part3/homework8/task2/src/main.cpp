@@ -28,7 +28,7 @@ int main()
 
   while (!exitFlag)
   {
-    std::cout << "Enter command (add, call, sms) > ";
+    std::cout << "Enter command (add, call, sms, exit) > ";
     std::cin >> command;
     if (command == "add")
       phone.addContact();

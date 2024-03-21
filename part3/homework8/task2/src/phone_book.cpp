@@ -2,8 +2,14 @@
 #include "phone_number.h"
 #include <map>
 
-bool PhoneBook::add(const std::string &name, const std::string &phoneNumber) {
-  if (PhoneNumber::isValidPhoneNumber(phoneNumber)) {
+// Добавление нового контакта
+bool PhoneBook::add(const std::string &name, const std::string &phoneNumber)
+{
+  if (PhoneNumber::isValidPhoneNumber(phoneNumber))
+  {
+    // Если контакт с таким именем существует, нужно удалить объект
+    if (data.count(name))
+      delete data[name];
     data[name] = new PhoneNumber(phoneNumber);
     return true;
   }
@@ -11,12 +17,17 @@ bool PhoneBook::add(const std::string &name, const std::string &phoneNumber) {
   return false;
 }
 
-PhoneNumber *PhoneBook::findPnoneNumberByName(const std::string &name) {
+// Проверка , есть ли в справочнике контакт с таким именем
+PhoneNumber *PhoneBook::findPnoneNumberByName(const std::string &name)
+{
   return data.count(name) ? data[name] : nullptr;
 }
 
-PhoneBook::~PhoneBook() {
-  while (!data.empty()) {
+PhoneBook::~PhoneBook()
+{
+  // Удаляем все динамически созданные объекты перед уничтожением справочника
+  while (!data.empty())
+  {
     auto iter = data.begin();
     PhoneNumber *deletedNumber = iter->second;
     data.erase(iter->first);
