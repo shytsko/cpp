@@ -1,19 +1,15 @@
-#ifndef DISPLAY_H
-#define DISPLAY_H
-
+#pragma once
 #include "window.h"
 
-class Display
-{
-    int width;
-    int height;
-    Window *window;
+class Display {
+  unsigned width;
+  unsigned height;
+  Window *window;
 
 public:
-    Display(int _width, int _height);
-    void addWindow(Window *window);
-    void render(void);
-    int getWidth(void);
-    int getHeight(void);
+  Display(unsigned _width, unsigned _height);
+  void addWindow(Window *window);
+  void render(void);
+  unsigned getWidth(void);
+  unsigned getHeight(void);
 };
-#endif
