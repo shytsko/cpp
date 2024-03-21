@@ -2,12 +2,12 @@ cmake_minimum_required(VERSION 3.17)
 
 add_executable(task3
     main.cpp
-    phone_number.cpp
-    ${PRJ_INCLUDE_DIR}/phone_number.h
-    phone_book.cpp
-    ${PRJ_INCLUDE_DIR}/phone_book.h
-    phone.cpp
-    ${PRJ_INCLUDE_DIR}/phone.h
+    ${PRJ_INCLUDE_DIR}/display.h
+    display.cpp
+    ${PRJ_INCLUDE_DIR}/window.h
+    window.cpp
+    ${PRJ_INCLUDE_DIR}/vector2D.h
+    vector2D.cpp
 )
 
-target_include_directories(task1 PUBLIC ${PRJ_INCLUDE_DIR})
+target_include_directories(task3 PUBLIC ${PRJ_INCLUDE_DIR})
