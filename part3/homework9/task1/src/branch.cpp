@@ -30,9 +30,11 @@ void Branch::addElf(std::string name) { elf = new Elf(name, this); }
 Elf *Branch::getElf(void) { return elf; }
 
 Elf *Branch::findElf(std::string name) {
+  // Если на ветке живет эльф с искомым именем, возвращается ссылка на него
   if (elf != nullptr && elf->getName() == name)
     return elf;
 
+  // Иначе поиск продолжается по дочерним веткам
   for (int i = 0; i < numberChildBranches; i++) {
     Elf *findedElf = childBranches[i]->findElf(name);
     if (findedElf != nullptr)

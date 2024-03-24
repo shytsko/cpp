@@ -33,11 +33,14 @@ Forest::Forest(void) {
   trees = new Branch *[NUMBER_TREES];
 
   for (int i = 0; i < NUMBER_TREES; i++) {
+    // Корень дерева
     trees[i] = new Branch(nullptr);
 
+    // В каждом дереве создается случайное количество основных веток
     trees[i]->addChildBranches(
         randBetween(MIN_NUMBER_MAIN_BRANCHES, MAX_NUMBER_MAIN_BRANCHES));
 
+    // От каждой основной ветки создается случайное количество средних веток
     for (int j = 0; j < trees[i]->getNumberChildBranches(); j++)
       trees[i]->getChildBranchAt(j)->addChildBranches(
           randBetween(MIN_NUMBER_MIDDLE_BRANCHES, MAX_NUMBER_MIDDLE_BRANCHES));
@@ -51,6 +54,8 @@ Forest::~Forest(void) {
   delete[] trees;
 }
 
+// Расселение эльфов по ветка. Если autoGenerate = true, имена эльфов
+// генерируются автоматически
 void Forest::settleElves(bool autoGenerate = false) {
   std::string name;
   for (int i = 0; i < NUMBER_TREES; i++) {
@@ -85,6 +90,7 @@ void Forest::settleElves(bool autoGenerate = false) {
   }
 }
 
+// Визуальное представление деревьев
 void Forest::view(void) {
   for (int i = 0; i < NUMBER_TREES; i++) {
     std::cout << "Tree " << i + 1 << "(" << trees[i] << ")" << std::endl;

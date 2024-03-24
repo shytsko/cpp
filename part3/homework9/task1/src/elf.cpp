@@ -18,7 +18,10 @@ Branch *Elf::getHomeBranch(void) {
   return homeBranch;
 }
 
+// Подсче соседей
 int Elf::countNeighbors(void) {
+  // Определяем основную ветку и считаем, сколько эльфов живет на основной ветке
+  // и на всех дочерних
   Branch *mainBranch = homeBranch->getNumberChildBranches() == 0
                            ? homeBranch->getParentBranch()
                            : homeBranch;
@@ -29,5 +32,6 @@ int Elf::countNeighbors(void) {
     if (mainBranch->getChildBranchAt(i)->getElf() != nullptr)
       count++;
 
+  // От резульата отнимает 1 - самого эльфа, для которого считаем соседей
   return count - 1;
 }
