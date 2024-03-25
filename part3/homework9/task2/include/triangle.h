@@ -4,14 +4,16 @@
 #include "rectangle.h"
 #include "shape.h"
 
-class Triangle : public Shape {
+class Triangle : public Shape
+{
   double sideLength;
 
 public:
   Triangle(Coordinate inCenter, Color inColor, double inSideLength);
-  double getSideLength(void);
-  double getArea(void);
-  Rectangle getCircumscribingRectangle(void);
+  double getSideLength(void) const;
+  virtual double getArea(void) const override;
+  virtual Rectangle getCircumscribingRectangle(void) const override;
+  virtual std::string getShapeType(void) const override;
 };
 
 #endif
