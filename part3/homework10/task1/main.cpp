@@ -20,7 +20,8 @@ std::mutex winnersLock;
 
 std::mutex outputLock;
 
-void swimming(std::string swimmerName, int speed, int distance) {
+void swimming(std::string swimmerName, int speed, int distance)
+{
   int swimmerSwam = 0;
   int time = 0;
 
@@ -29,16 +30,19 @@ void swimming(std::string swimmerName, int speed, int distance) {
             << std::endl;
   outputLock.unlock();
 
-  while (true) {
+  while (true)
+  {
     std::this_thread::sleep_for(std::chrono::seconds(1));
     swimmerSwam += speed;
     time++;
-    if (swimmerSwam < distance) {
+    if (swimmerSwam < distance)
+    {
       outputLock.lock();
       std::cout << "In " << time << " s swimmer " << swimmerName << " swam "
                 << swimmerSwam << " m" << std::endl;
       outputLock.unlock();
-    } else
+    }
+    else
       break;
   }
 
@@ -52,12 +56,14 @@ void swimming(std::string swimmerName, int speed, int distance) {
   winnersLock.unlock();
 }
 
-int main() {
+int main()
+{
   std::srand((unsigned)std::time(nullptr));
 
   std::thread *swims[NUMBER_TRACKS];
 
-  for (int i = 0; i < NUMBER_TRACKS; i++) {
+  for (int i = 0; i < NUMBER_TRACKS; i++)
+  {
     swims[i] = new std::thread(swimming, "Swimmer" + std::to_string(i + 1),
                                std::rand() % 10 + 5, 100);
   }
@@ -67,10 +73,12 @@ int main() {
 
   int j = 0;
   outputLock.lock();
-  std::cout << std::endl << "Results:" << std::endl;
+  std::cout << std::endl
+            << "Results:" << std::endl;
 
   winnersLock.lock();
-  for (std::string name : winners) {
+  for (std::string name : winners)
+  {
     std::cout << ++j << ".\t" << name << std::endl;
   }
   winnersLock.unlock();
