@@ -4,7 +4,6 @@ project("Homework12 task1" VERSION 1.0)
 
 set(CMAKE_CXX_STANDARD 17)
 
-set(PRJ_INCLUDE_DIR ${CMAKE_SOURCE_DIR}/include)
 set(PRJ_SRC_DIR ${CMAKE_SOURCE_DIR}/src)
 
 set(BUILD_CPR_TESTS OFF)
@@ -21,5 +20,4 @@ add_executable(task1
     ${PRJ_SRC_DIR}/main.cpp
 )
 
-target_include_directories(task1 PUBLIC ${PRJ_INCLUDE_DIR})
 target_link_libraries(task1 PRIVATE cpr::cpr)
