@@ -7,7 +7,7 @@ class IGraph {
 public:
   virtual ~IGraph();
   IGraph();
-  IGraph(IGraph *_oth);
+  IGraph(const IGraph &other);
   virtual void addEdge(int from, int to) = 0;
   virtual int getVerticesCount() const = 0;
   virtual void getNextVertices(int vertex,
