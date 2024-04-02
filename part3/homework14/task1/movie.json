@@ -1,0 +1,56 @@
+{
+    "title": "The Green Mile",
+    "country": "USA",
+    "year": 1999,
+    "production": [
+        "Castle Rock Entertainment",
+        "Darkwoods Productions"
+    ],
+    "writers": [
+        "Stephen King",
+        "Frank Darabont"
+    ],
+    "director": "Frank Darabont",
+    "producers": [
+        "Frank Darabont",
+        "David Valdes"
+    ],
+    "characters": [
+        {
+            "character": "Paul Edgecomb",
+            "actor": "Tom Hanks"
+        },
+        {
+            "character": "Brutus Howell",
+            "actor": "David Morse"
+        },
+        {
+            "character": "Jan Edgecomb",
+            "actor": "Bonnie Hunt"
+        },
+        {
+            "character": "John Coffey",
+            "actor": "Michael Clarke"
+        },
+        {
+            "character": "James Cromwell",
+            "actor": "Graham Greene"
+        },
+        {
+            "character": "Eduard Delacroix",
+            "actor": " Arlen Bitterbuck"
+        },
+        {
+            "character": "Percy Wetmore",
+            "actor": "Doug Hutchison"
+        },
+        {
+            "character": "William Wharton",
+            "actor": "Sam Rockwell"
+        },
+        {
+            "character": "Dean Stanton",
+            "actor": "Barry Pepper"
+        }
+    ]
+}
