@@ -70,9 +70,7 @@ int main()
               << "name: " << person["enName"] << std::endl
               << "photo: " << person["photo"] << std::endl
               << std::endl;
-    unsigned long id;
-    person["id"].get_to(id);
-    validID.insert(id);
+    validID.insert(person["id"].get<unsigned long>());
   }
 
   // Если результатов поиска несколько, дополнительно запрашиваем, по какому конкретно id получать список фильмов
