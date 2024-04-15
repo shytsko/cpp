@@ -7,7 +7,7 @@ HumanPlayer::HumanPlayer(std::string inName) : Player(inName) {}
 unsigned HumanPlayer::getMove(unsigned min, unsigned max, unsigned remainder) {
   while (true) {
     std::cout << "How many matches do you want to take (" << min << "-" << max
-              << ")? >";
+              << ")? > ";
 
     unsigned input;
     std::cin >> input;

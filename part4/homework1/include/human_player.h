@@ -4,6 +4,7 @@
 #include "player.h"
 #include <string>
 
+// Игрок человек. Ввод очередного хода будет с клавиатуры
 class HumanPlayer : public Player {
 public:
   HumanPlayer(std::string inName);

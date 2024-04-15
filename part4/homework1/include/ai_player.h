@@ -4,6 +4,7 @@
 #include "player.h"
 #include <string>
 
+// Игрок ИИ. Очередной ход расчитывается по сложному алгоритму
 class AIPlayer : public Player {
 public:
   AIPlayer(std::string inName);

@@ -3,6 +3,7 @@
 
 #include <string>
 
+// Абстрактный класс игрока
 class Player {
   std::string name;
 
